@@ -1,7 +1,7 @@
 #ifndef INNER_POINT_CONTROL_HPP_INCLUDED
 #define INNER_POINT_CONTROL_HPP_INCLUDED
 
-#include "renderer.hpp"
+#include <renderer.hpp>
 
 #include <QWidget>
 #include <QLabel>

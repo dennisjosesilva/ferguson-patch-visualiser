@@ -1,7 +1,7 @@
-#include "window.hpp"
-#include "renderer.hpp"
-#include "inner_point_control.hpp"
-#include "ferguson_control.hpp"
+#include <window.hpp>
+#include <renderer.hpp>
+#include <inner_point_control.hpp>
+#include <ferguson_control.hpp>
 
 #include <QGridLayout>
 #include <QVBoxLayout>
@@ -9,7 +9,7 @@
 
 Window::Window()
 {
-	setWindowTitle(tr("Ferguson curve visualiser"));
+	setWindowTitle(tr("Ferguson patch visualiser"));
 	Renderer *renderer = new Renderer(this);
 	InnerPointControl *innerPointControl = new InnerPointControl(this, renderer);
 	FergusonControl *fergusonControl = new FergusonControl(this, renderer);

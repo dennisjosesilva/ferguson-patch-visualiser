@@ -1,4 +1,4 @@
-#include "hermite_curve.hpp"
+#include <hermite_curve.hpp>
 #include <cmath>
 #include <QMouseEvent>
 

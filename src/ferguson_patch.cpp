@@ -1,4 +1,4 @@
-#include "ferguson_patch.hpp"
+#include <ferguson_patch.hpp>
 #include <cmath>
 #include <QMouseEvent>
 

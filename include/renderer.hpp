@@ -6,7 +6,7 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
 
-#include "ferguson_canvas.hpp"
+#include <ferguson_canvas.hpp>
 // #include "hermite_curve.hpp"
 
 
@@ -14,9 +14,6 @@ QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
 class Renderer : public QOpenGLWidget, protected QOpenGLFunctions
 {
-
-	Q_OBJECT
-
 public:
 	Renderer(QWidget *parent);
 

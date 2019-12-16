@@ -1,7 +1,7 @@
 #ifndef FERGUSON_CONTROL_HPP_INCLUDED
 #define FERGUSON_CONTROL_HPP_INCLUDED
 
-#include "renderer.hpp"
+#include <renderer.hpp>
 
 #include <QWidget>
 #include <QLabel>

@@ -1,4 +1,4 @@
-#include "ferguson_canvas.hpp"
+#include <ferguson_canvas.hpp>
 
 
 FergusonCanvas::FergusonCanvas(QOpenGLWidget *renderer, int width, int height)

@@ -1,8 +1,8 @@
-#include "renderer.hpp"
+#include <renderer.hpp>
 // #include "hermite_curve.hpp"
 #include <QOpenGLShaderProgram>
 #include <array>
-#include "ferguson_patch.hpp"
+#include <ferguson_patch.hpp>
 
 Renderer::Renderer(QWidget *parent)
 	:QOpenGLWidget(parent)

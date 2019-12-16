@@ -1,4 +1,4 @@
-#include "inner_point_control.hpp"
+#include <inner_point_control.hpp>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 

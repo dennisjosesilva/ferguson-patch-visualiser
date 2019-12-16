@@ -9,14 +9,16 @@ set(CMAKE_AUTOMOC ON)
 # OpenGL
 find_package(OpenGL)
 
+include_directories(include)
+
 set(SOURCES 
-	main.cpp
-	renderer.cpp
-	window.cpp
-	ferguson_canvas.cpp
-	ferguson_patch.cpp
-	inner_point_control.cpp
-	ferguson_control.cpp)
+	./src/main.cpp
+	./src/renderer.cpp
+	./src/window.cpp
+	./src/ferguson_canvas.cpp
+	./src/ferguson_patch.cpp
+	./src/inner_point_control.cpp
+	./src/ferguson_control.cpp)
 
 #executable
 add_executable(ferguson ${SOURCES})

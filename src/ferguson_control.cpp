@@ -1,4 +1,4 @@
-#include "ferguson_control.hpp"
+#include <ferguson_control.hpp>
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

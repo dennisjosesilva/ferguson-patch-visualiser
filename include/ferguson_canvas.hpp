@@ -4,8 +4,8 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 
-#include "canvas.hpp"
-#include "drawing.hpp"
+#include <canvas.hpp>
+#include <drawing.hpp>
 #include <memory>
 #include <vector>
 

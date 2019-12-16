@@ -10,8 +10,8 @@
 #include <vector>
 #include <memory>
 
-#include "drawing.hpp"
-#include "ferguson_canvas.hpp"
+#include <drawing.hpp>
+#include <ferguson_canvas.hpp>
 
 class Circle
 {
