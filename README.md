@@ -5,13 +5,13 @@
 </p>
 
 Ferguson patch visualiser based on the traditional gradient mesh described in [(Barendrecht, 2008)](#1)  but considering only 
-geometric information. This app create a Ferguson patch bounded by 4 Hermite curves which can be changed by moving its control
+geometric information. This app creates a Ferguson patch bounded by 4 Hermite curves which can be changed by moving its control
 points (position and tangents). You can also hide or show these control points and interpolate a point within this curve 
 parameterised by values of (u,v).
 
 ## Requirements
 - C++ 17
-- Cmake 3.12.0
+- CMake 3.12.0
 - OpenGL 3.3
 - Qt 5.13.0
 
