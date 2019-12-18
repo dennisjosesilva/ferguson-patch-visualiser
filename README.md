@@ -4,7 +4,7 @@
   <img src="example.gif" />
 </p>
 
-Ferguson patch visualiser based on the traditional gradient mesh described in [(Barendrecht, 2008)](#1)  but considering only 
+Ferguson patch visualiser based on the traditional gradient mesh described in [(Barendrecht et al., 2008)](#1)  but considering only 
 geometric information and fixed <i>twist vector</i> in (0,0). This app creates a Ferguson patch bounded by 4 Hermite curves which can be changed by moving its control
 points (position and tangents). You can also hide or show these control points and interpolate a point within this curve 
 parameterised by values of (u,v).
