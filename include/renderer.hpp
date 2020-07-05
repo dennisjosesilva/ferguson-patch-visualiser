@@ -25,6 +25,7 @@ public:
 	void mousePressEvent(QMouseEvent *e);
 	void mouseReleaseEvent(QMouseEvent *e);
 
+	bool save(const QString &filename);
 
 	void interpolateInnerPoint(float u, float v);
 	void hideInnerPointInterpolation();

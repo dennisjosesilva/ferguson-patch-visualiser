@@ -25,6 +25,12 @@ Renderer::Renderer(QWidget *parent)
 }
 
 
+bool Renderer::save(const QString &filename)
+{
+	QImage image = grabFramebuffer();
+	return image.save(filename, "PNG");
+}
+
 void Renderer::interpolateInnerPoint(float u, float v)
 {
 	makeCurrent();
