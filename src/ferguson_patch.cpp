@@ -39,12 +39,14 @@ bool Circle::contains(const QPointF p) const
 
 // ------------------------------ FERGUSON PATCH -----------------------------------------------------
 HermiteCurveComputer::HermiteCurveComputer(QPointF p0, QPointF t0, QPointF p1, QPointF t1, 
-	unsigned int resolution, unsigned int startIndex)
+	unsigned int resolution, unsigned int startIndex, std::shared_ptr<Canvas> canvas,
+	float tangentScale)
 	:p0_{p0}, t0_{t0}, p1_{p1}, t1_{t1}, 
 	 resolution_{resolution}, 
 	 startIndex_{startIndex},
 	 startTangentIndex_{startIndex_ + resolution_},
-	 cp0_{p0_, 0.02, 10}, ct0_{p0_+t0_, 0.02, 10}, cp1_{p1_, 0.02, 10}, ct1_{p1_+t1_, 0.02, 10}
+	 cp0_{p0_, 0.2, 10}, ct0_{p0_+t0_, 0.2, 10}, cp1_{p1_, 0.2, 10}, ct1_{p1_+t1_, 0.2, 10},
+	 canvas_{canvas}, tangentScale_{tangentScale}
 { }
 
 std::vector<float> HermiteCurveComputer::computePoints() const
@@ -58,7 +60,8 @@ std::vector<float> HermiteCurveComputer::computePoints() const
 		float u2 = u1*u1;
 		float u3 = u2*u1;
 
-		QPointF p = b0(u3,u2,u1) * p0_ + b1(u3,u2,u1) * p1_ + b2(u3,u2,u1) * t0_ + b3(u3,u2,u1) * t1_;
+		QPointF p = b0(u3,u2,u1) * p0_ + b1(u3,u2,u1) * p1_ + 
+			b2(u3,u2,u1) * tangentScale_* t0_ + b3(u3,u2,u1) * tangentScale_ * t1_;
 		vertices[2*i] = p.x();
 		vertices[2*i+1] = p.y();
 	}
@@ -105,8 +108,24 @@ float HermiteCurveComputer::b3(float u3, float u2, float u1) const
 	return u3 - u2;
 }
 
+
+QPointF HermiteCurveComputer::toWorldCoordinate(const QPointF &screenCoords) const
+{
+	std::shared_ptr<FergusonCanvas> fcanvas = std::dynamic_pointer_cast<FergusonCanvas>(canvas_); 
+	
+	float rl = (fcanvas->viewRight() - fcanvas->viewLeft()) / 2.0f;
+	float bt = (fcanvas->viewTop() - fcanvas->viewBottom()) / 2.0f;
+
+	float hmid = fcanvas->viewLeft() + rl;
+	float vmid = fcanvas->viewBottom() + bt;
+
+	return QPointF(hmid + rl * -screenCoords.x(), vmid + bt * screenCoords.y());
+}
+
 void HermiteCurveComputer::mousePress(QPointF pos)
 {
+	pos = toWorldCoordinate(pos);
+
 	if (cp0_.contains(pos)) 
 		cp0_.select();
 
@@ -122,6 +141,8 @@ void HermiteCurveComputer::mousePress(QPointF pos)
 
 void HermiteCurveComputer::mouseMove(QPointF pos)
 {
+	pos = toWorldCoordinate(pos);
+
 	if (cp0_.isSelected()){
 		p0_ = pos;
 		cp0_.centre(pos);
@@ -245,8 +266,8 @@ QPointF FergusonPatch::s(float u, float v) const
 	float v3 = v2*v1;
 
 	QPointF p0  = h0_.p0(), p1  = h0_.p1(), p2  = h2_.p0(), p3  = h2_.p1();
-	QPointF t01 = h0_.t0(), t10 = h0_.t1(), t13 = h1_.t0(), t31 = h1_.t1(),
-			t23 = h2_.t0(), t32 = h2_.t1(), t02 = h3_.t0(), t20 = h3_.t1(); 
+	QPointF t01 = h0_.st0(), t10 = -h0_.st1(), t13 = h1_.st0(), t31 = -h1_.st1(),
+			t23 = h2_.st0(), t32 = -h2_.st1(), t02 = h3_.st0(), t20 = -h3_.st1(); 
 
 	// return
 	// 	b0(u3, u2, u1) * (b0(v3, v2, v1)*p0  + b1(v3, v2, v1)*t02 + b2(v3, v2, v1)*t20 + b3(v3, v2, v1)*p2 ) + 
@@ -266,6 +287,19 @@ void FergusonPatch::init()
 	setupShaders();
 	setupGeometry();
 	interpolateInnerPoint(0.5f, 0.5f);
+}
+
+
+void FergusonPatch::setViewMatrixToShader(const QMatrix4x4 &viewMatrix) const
+{
+	shader_->bind();
+	shader_->setUniformValue("view", viewMatrix);
+}
+
+void FergusonPatch::setProjectionMatrixToShader(const QMatrix4x4 &projMatrix) const
+{
+	shader_->bind();
+	shader_->setUniformValue("projection", projMatrix);
 }
 
 void FergusonPatch::setupShaders()

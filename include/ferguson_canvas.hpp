@@ -3,6 +3,7 @@
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
+#include <QMatrix4x4>
 
 #include <canvas.hpp>
 #include <drawing.hpp>
@@ -17,6 +18,8 @@ public:
 	void init() override;
 	void render() override;
 
+	void initCameraMatrices();
+
 	// Keyboard Event
 	void keyPress(QKeyEvent *e) override;
 	void keyRelease(QKeyEvent *e) override;
@@ -30,6 +33,15 @@ public:
 
 	void destroy() override;
 
+	inline float viewLeft() const { return viewLeft_; }
+	inline float viewRight() const { return viewRight_; }
+	inline float viewBottom() const { return viewBottom_; }
+	inline float viewTop() const { return viewTop_; }
+	inline float farPlane() const { return farPlane_; }
+	inline float nearPlane() const { return nearPlane_; }
+
+	
+
 	int height() const override { return height_; }
 	int width() const override { return width_; }
 
@@ -41,6 +53,17 @@ public:
 private:
 	std::vector<std::shared_ptr<Drawing>> drawings_;
 	QOpenGLWidget *renderer_;
+
+	QMatrix4x4 view_;
+	QMatrix4x4 projection_;
+
+	float viewLeft_;
+	float viewRight_;
+	float viewBottom_;
+	float viewTop_;
+	float farPlane_;
+	float nearPlane_;
+
 	int width_;
 	int height_;
 };

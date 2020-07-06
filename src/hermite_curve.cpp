@@ -1,6 +1,7 @@
 #include <hermite_curve.hpp>
 #include <cmath>
 #include <QMouseEvent>
+#include <iostream>
 
 HermiteCurve::HermiteCurve(std::shared_ptr<FergusonCanvas> canvas)
 	:p0_{QPointF(-0.5,0.0)},    d0_{QPointF( 0.5,  0.5)}, 
@@ -75,6 +76,18 @@ void HermiteCurve::init()
 	setupGeometry();
 }
 
+void HermiteCurve::setViewMatrixToShader(const QMatrix4x4 &viewMatrix) const
+{
+	shader_->bind();
+	shader_->setUniformValue("view", viewMatrix);
+}
+
+void HermiteCurve::setProjectionMatrixToShader(const QMatrix4x4 &projMatrix) const
+{
+	shader_->bind();
+	shader_->setUniformValue("projection", projMatrix);
+}
+
 void HermiteCurve::setupShaders()
 {
 	shader_ = new QOpenGLShaderProgram();
@@ -104,6 +117,20 @@ QPointF HermiteCurve::toViewportCoordSystem(const QPointF& screenCoords) const
 {
 
 	return QPointF(2.f*screenCoords.x()/canvas_->width() - 1.f, 1.f - 2.f*screenCoords.y()/canvas_->height());
+}
+
+QPointF HermiteCurve::toWorldCoordinate(const PointF &screenCoords) const
+{
+	FergusonCanvas *fcanvas = std::dynamic_pointer_cast<FergusonCanvas>(canvas_); 
+	QPointF p = toViewportCoordSystem(screenCoords);
+
+	float rl = (fcanvas->viewRight() - fcanvas->viewLeft()) / 2.0f;
+	float bt = (fcanvas->viewTop() - fcanvas->viewBottom()) / 2.0f;
+
+	float hmid = fcanvas->viewLeft() + rl;
+	float vmid = fcanvas->viewBottom() + bt;
+
+	return QPointF(hmid + rl*p.x(), vmid + bt*p.y());
 }
 
 void HermiteCurve::updateGPUBuffers()
@@ -167,8 +194,10 @@ void HermiteCurve::keyRelease(QKeyEvent *e)
 void HermiteCurve::mousePress(QMouseEvent *e)
 { 
 	QPointF pos = e->localPos();
-	pos = toViewportCoordSystem(pos);
+	pos = toWorldCoordinate(pos);
 	
+	std::cout << "pos" << std::endl;
+
 	if(cp0_.contains(pos))
 		cp0_.select();
 
@@ -184,8 +213,9 @@ void HermiteCurve::mousePress(QMouseEvent *e)
 
 void HermiteCurve::mouseMove(QMouseEvent *e)
 {		
-	QPointF pos = toViewportCoordSystem(e->localPos());
-	
+	QPointF pos = toWorldCoordinate(e->localPos());
+	std::cout << "pos" << std::endl;
+
 	if (cp0_.isSelected()) {
 		p0_ = pos;
 		cd0_.centre(p0_ + d0_);

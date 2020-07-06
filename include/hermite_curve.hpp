@@ -76,6 +76,11 @@ public:
 	void init() override;
 	void render() override;
 
+
+	void setViewMatrixToShader(const QMatrix4x4 &viewMatrix) const override;
+	void setProjectionMatrixToShader(const QMatrix4x4 &projMatrix) const override;
+
+
 	// keyboard events
 	void keyPress(QKeyEvent *e) override;
 	void keyRelease(QKeyEvent *e) override;
@@ -102,6 +107,7 @@ private:
 	void updateGPUBuffers();
 
 	QPointF toViewportCoordSystem(const QPointF& screenCoords) const;
+	QPointF toWorldCoordinate(const PointF &screenCoords) const;
 
 private:
 	int resolution_;

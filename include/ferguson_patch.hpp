@@ -54,7 +54,9 @@ public:
 		QPointF p1=QPointF( 0.75f, 0.0f), 
 		QPointF t1=QPointF(-0.10f, 0.0f),
 		unsigned int resolution = 10,
-		unsigned int startIndex = 0);
+		unsigned int startIndex = 0,
+		std::shared_ptr<Canvas> canvas=nullptr,
+		float tangentScale=1.0f);
 
 	unsigned int  startIndex() const { return startIndex_; }
 	unsigned int& startIndex() { return startIndex_; }
@@ -68,7 +70,7 @@ public:
 	unsigned int &resolution() { return resolution_; }
 	void resolution(unsigned int val) { resolution_ = val; }
 
-	const QPointF  &p0() const { return p0_; }
+	const QPointF  &p0() const { return p0_ ; }
 	QPointF        &p0() { return p0_; }
 	void            p0(QPointF val) { p0_ = val; }
 
@@ -84,9 +86,14 @@ public:
 	QPointF        &t1() { return t1_; }
 	void            t1(QPointF val) { t1_ = val; }
 
+	const QPointF st0() const { return tangentScale_ * t0_; }
+	const QPointF st1() const { return tangentScale_ * t1_; }
+
 	std::vector<float> computePoints() const;
 
 	bool hasControlPointSelected() const;
+
+	QPointF toWorldCoordinate(const QPointF &screenCoords) const;
 
 	void mousePress(QPointF pos);
 	void mouseMove(QPointF pos);
@@ -103,6 +110,9 @@ private:
 	unsigned int startTangentIndex_;
 	
 	unsigned resolution_; 
+	float tangentScale_;
+
+	std::shared_ptr<Canvas> canvas_;
 
 	QPointF p0_;
 	QPointF t0_;
@@ -131,6 +141,9 @@ public:
 
 	void init() override;
 	void render() override; 
+
+	void setViewMatrixToShader(const QMatrix4x4 &viewMatrix) const override;
+	void setProjectionMatrixToShader(const QMatrix4x4 &projMatrix) const override;
 
 	// keyboard events
 	void keyPress(QKeyEvent *e) override;

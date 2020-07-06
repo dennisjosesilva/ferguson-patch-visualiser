@@ -5,6 +5,7 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
+#include <QMatrix4x4>
 
 #include <ferguson_canvas.hpp>
 // #include "hermite_curve.hpp"
@@ -42,6 +43,7 @@ protected:
 
 protected:
 	std::shared_ptr<FergusonCanvas> canvas_;
+	
 };
 
 #endif

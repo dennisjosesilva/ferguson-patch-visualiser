@@ -3,6 +3,7 @@
 #include <QOpenGLShaderProgram>
 #include <array>
 #include <ferguson_patch.hpp>
+#include <iostream>
 
 Renderer::Renderer(QWidget *parent)
 	:QOpenGLWidget(parent)
@@ -10,16 +11,20 @@ Renderer::Renderer(QWidget *parent)
 	setFixedSize(800, 600);
 	canvas_ = std::make_shared<FergusonCanvas>(this, width(), height());
 	// canvas_->insertDrawing(std::make_shared<HermiteCurve>(canvas_));
+	float tangentScale = 3.0f;
 
-	QPointF p0{-0.75f, 0.75f}, p1{ 0.75f,  0.75f}, p2{-0.75f, -0.75f}, p3{ 0.75f, -0.75f};
 
-	QPointF t01{ 0.05f,  0.00f}, t02{ 0.00f, -0.05f}, t10{-0.05f, 0.00f}, t13{ 0.00f, -0.05f},
-			t20{ 0.00f,  0.05f}, t23{ 0.05f,  0.00f}, t31{ 0.00f, 0.05f}, t32{-0.05f,  0.00f};
+	QPointF p0{-5.0f, 5.0f}, p1{ 5.0f,  5.0f}, p2{-5.0f, -5.0f}, p3{ 5.0f, -5.0f};
+
+	QPointF t01{ 1.0f,  0.0f}, t02{ 0.0f, -1.0f}, t10{-1.0f, 0.0f}, t13{ 0.0f, -1.0f},
+			t20{ 0.0f,  1.0f}, t23{ 1.0f,  0.0f}, t31{ 0.0f, 1.0f}, t32{-1.0f,  0.0f};
 
 
 	unsigned int res=10;
-	HermiteCurveComputer h0{p0, t01, p1, t10, res, 0*(res+4+44)}, h1{p1, t13, p3, t31, res, (res+4+44)*1},
-						 h2{p2, t23, p3, t32, res, 2*(res+4+44)}, h3{p0, t02, p2, t20, res, (res+4+44)*3};
+	HermiteCurveComputer h0{p0, t01, p1, t10, res, 0*(res+4+44), canvas_, tangentScale}, 
+						 h1{p1, t13, p3, t31, res, (res+4+44)*1, canvas_, tangentScale},
+						 h2{p2, t23, p3, t32, res, 2*(res+4+44), canvas_, tangentScale}, 
+						 h3{p0, t02, p2, t20, res, (res+4+44)*3, canvas_, tangentScale};
 
 	canvas_->insertDrawing(std::make_shared<FergusonPatch>(h0, h1, h2, h3, res, canvas_));
 }
